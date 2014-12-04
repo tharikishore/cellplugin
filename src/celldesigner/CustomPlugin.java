@@ -10,19 +10,22 @@ import jp.sbi.celldesigner.plugin.PluginMenuItem;
 //import jp.sbi.celldesigner.plugin.PluginReaction;
 import jp.sbi.celldesigner.plugin.PluginSBase;
 
-public class SamplePlugin extends CellDesignerPlugin {
+public class CustomPlugin extends CellDesignerPlugin {
 
     /**
      * Constructor
      */
-    public SamplePlugin(boolean boo) {
+    public CustomPlugin(boolean boo) {
     }
 
-    public SamplePlugin() {
+    public CustomPlugin() {
         PluginMenu menu = new PluginMenu("Flux Based Scoring System - Mod");
-        PlainPluginAction action = new PlainPluginAction(this);
-        PluginMenuItem item = new PluginMenuItem("FBSS-X", action);
-        menu.add(item);
+        ReactionMenuAction action = new ReactionMenuAction(this);
+        PluginMenuItem reactionsMenuItem = new PluginMenuItem("Reactions", action);
+        menu.add(reactionsMenuItem);
+        SpeciesMenuAction action2 = new SpeciesMenuAction(this);
+        menu.add(new PluginMenuItem("Species", action2));
+        
         addCellDesignerPluginMenu(menu);
     }
 

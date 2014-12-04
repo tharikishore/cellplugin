@@ -10,11 +10,11 @@ import jp.sbi.celldesigner.plugin.PluginSpeciesAlias;
 
 import com.al.CellDesignerPluginFrame;
 
-class PlainPluginAction extends PluginAction {
+class ReactionMenuAction extends PluginAction {
 	private static final long serialVersionUID = 1L;
-	private SamplePlugin plugin;
+	private CustomPlugin plugin;
 
-	public PlainPluginAction(SamplePlugin _plugin) {
+	public ReactionMenuAction(CustomPlugin _plugin) {
 		this.plugin = _plugin;
 	}
 
