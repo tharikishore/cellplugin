@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import jp.sbi.celldesigner.plugin.PluginAction;
 import jp.sbi.celldesigner.plugin.PluginListOf;
@@ -19,37 +20,69 @@ import com.al.CellDesignerPluginFrame;
 class ReactionMenuAction extends PluginAction {
 	private static final long serialVersionUID = 1L;
 	private CustomPlugin plugin;
+	private Map<String, Integer> scoreMap;
 
 	public ReactionMenuAction(CustomPlugin _plugin) {
 		this.plugin = _plugin;
-		calculateScores();
+		scoreMap = new HashMap<String, Integer>();
 	}
 
 	private void calculateScores() {
 		PluginModel selectedModel = this.plugin.getSelectedModel();
-		Map<String, Integer> scoreMap = new HashMap();
-		
+
 		for (int i = 0; i < selectedModel.getNumReactions(); i++) {
 			PluginReaction reaction = selectedModel.getReaction(i);
 			int reactants = reaction.getNumReactants();
 			int modifiers = reaction.getNumModifiers();
-			List productList = getAllProducts(reaction);
-			
-			for (Iterator iterator = productList.iterator(); iterator.hasNext();) {
+			List<String> productList = getAllProducts(reaction);
+
+			for (Iterator<String> iterator = productList.iterator(); iterator.hasNext();) {
 				String product = (String) iterator.next();
-				
-				if(scoreMap.containsKey(product)){
-					scoreMap.put(product, scoreMap.get(product) - 1);
-				}else{
-					scoreMap.put(product, reactants + modifiers);
+
+				if (scoreMap.containsKey(product)) {//
+					scoreMap.put(product, new Integer(scoreMap.get(product)
+							.intValue() - 1));
+				} else {
+					scoreMap.put(product, new Integer(reactants + modifiers));
 				}
 			}
 		}
-
 	}
 
 	public void myActionPerformed(ActionEvent e) {
-		showPluginframe();
+		try {
+			// showPluginframe();
+			showScores();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	private void showScores() {
+		calculateScores();
+
+		PluginModel selectedModel = this.plugin.getSelectedModel();
+		int reactionCount = selectedModel.getNumReactions();
+
+		Object[][] scores = new Object[reactionCount][2];
+
+		int index = 0;
+		for (Iterator<Entry<String, Integer>> iterator = scoreMap.entrySet()
+				.iterator(); iterator.hasNext();) {
+			@SuppressWarnings("rawtypes")
+			Entry entry = (Entry) iterator.next();
+
+			scores[index] = new Object[] { entry.getKey(), entry.getValue() };
+			System.out.println(scores[index]);
+			index++;
+		}
+		// new Object[][]{ {"a","b"},{"c","d"} },
+		CellDesignerPluginFrame fr = new CellDesignerPluginFrame(scores,
+				new String[] { "Product", "Score" });
+
+		fr.addWindowListener(new BasicWindowMonitor());
+
+		fr.setVisible(true);
 	}
 
 	public void showPluginframe() {
@@ -71,11 +104,6 @@ class ReactionMenuAction extends PluginAction {
 					Integer.toString(reaction.getNumProducts()), reactants,
 					Integer.toString(reaction.getNumReactants()), modifiers,
 					Integer.toString(reaction.getNumModifiers()) };
-
-			// fOR EACH PRODUCT IN A REACTION SCORE OF PRODUCT = NO. OF
-			// REACTANTS + NO. OF PRODUCTS
-			// IF A PRODUCT IS OCCURING IN ANOTHER REACTION, REDUCE THE SCORE BY
-			// 1
 		}
 		String[] columnNames = new String[] { "Reaction Name",
 				"Reaction Types", "Products", "No. Of Products", "Reactants",
@@ -89,10 +117,9 @@ class ReactionMenuAction extends PluginAction {
 		fr.setVisible(true);
 	}
 
-	public List getAllProducts(PluginReaction reaction) {
-		List productList = new ArrayList();
+	public List<String> getAllProducts(PluginReaction reaction) {
+		List<String> productList = new ArrayList<String>();
 		int num = reaction.getNumProducts();
-		String products = new String();
 		for (int i = 0; i < num; i++) {
 			productList.add(reaction.getProduct(i).getSpeciesInstance()
 					.getName());
