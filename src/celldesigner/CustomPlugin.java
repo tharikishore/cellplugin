@@ -23,8 +23,8 @@ public class CustomPlugin extends CellDesignerPlugin {
         ReactionMenuAction action = new ReactionMenuAction(this);
         PluginMenuItem reactionsMenuItem = new PluginMenuItem("Reactions", action);
         menu.add(reactionsMenuItem);
-        SpeciesMenuAction action2 = new SpeciesMenuAction(this);
-        menu.add(new PluginMenuItem("Species", action2));
+        ProductScoreMenuAction action2 = new ProductScoreMenuAction(this);
+        menu.add(new PluginMenuItem("Scores", action2));
         
         addCellDesignerPluginMenu(menu);
     }
