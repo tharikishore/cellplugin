@@ -1,18 +1,25 @@
 package celldesigner;
 
 import java.awt.event.ActionEvent;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import jp.sbi.celldesigner.plugin.PluginAction;
 import jp.sbi.celldesigner.plugin.PluginModel;
 import jp.sbi.celldesigner.plugin.PluginReaction;
+
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.linear.SingularValueDecomposition;
 
 import com.al.CellDesignerPluginFrame;
 
@@ -37,6 +44,8 @@ class ProductScoreMenuAction extends PluginAction {
 
 	private void showScores() {
 		String[][] scores2 = calculateScores();
+		
+		scores2 = calcSvd(scores2);
 
 		PluginModel selectedModel = this.plugin.getSelectedModel();
 		int reactionCount = selectedModel.getNumReactions();
@@ -58,6 +67,35 @@ class ProductScoreMenuAction extends PluginAction {
 		fr.setVisible(true);
 	}
 	
+	private String[][] calcSvd(String[][] scores2) {
+		double[][] mData = new double[scores2.length - 1][scores2[0].length - 1];
+		
+		for (int i = 0; i < mData.length; i++) {
+			mData[i] = new double[scores2[0].length - 1];
+			String[] source = scores2[i+1];
+			for (int j = 0; j < source.length - 1; j++) {
+				mData[i][j] = Double.parseDouble(source[j + 1]);
+			}
+			System.out.println(Arrays.asList(mData[i]));
+		}
+		
+		RealMatrix m = MatrixUtils.createRealMatrix(mData);
+		SingularValueDecomposition svd = new SingularValueDecomposition(m);
+		RealMatrix v = svd.getV();
+		double[][] vdata = v.getData();
+		NumberFormat formatter = new DecimalFormat("#0.0000000000");
+		for (int i = 0; i < vdata.length; i++) {
+			double[] ds = vdata[i];
+			for (int j = 0; j < ds.length; j++) {
+				System.out.print(ds[j]+"~");
+				scores2[j+1][i+1] = formatter.format(ds[j]);
+			}
+			System.out.println("\n");
+		}
+		return scores2;
+		
+	}
+
 	private String[][] calc2(){
 		PluginModel model = this.plugin.getSelectedModel();
 		int cReactions = model.getNumReactions();
