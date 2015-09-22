@@ -19,10 +19,10 @@ public class CustomPlugin extends CellDesignerPlugin {
     }
 
     public CustomPlugin() {
-        PluginMenu menu = new PluginMenu("Flux Based Scoring System - Mod");
-        ReactionMenuAction action = new ReactionMenuAction(this);
-        PluginMenuItem reactionsMenuItem = new PluginMenuItem("Reactions", action);
-        menu.add(reactionsMenuItem);
+        PluginMenu menu = new PluginMenu("Scoring System");
+        //ReactionMenuAction action = new ReactionMenuAction(this);
+        //PluginMenuItem reactionsMenuItem = new PluginMenuItem("Reactions", action);
+        //menu.add(reactionsMenuItem);
         ProductScoreMenuAction action2 = new ProductScoreMenuAction(this);
         menu.add(new PluginMenuItem("Scores", action2));
         

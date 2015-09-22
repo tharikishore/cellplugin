@@ -1,7 +1,6 @@
 package celldesigner;
 
 import java.awt.event.ActionEvent;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -14,16 +13,19 @@ import java.util.Map;
 import java.util.Set;
 
 import jp.sbi.celldesigner.plugin.PluginAction;
+import jp.sbi.celldesigner.plugin.PluginListOf;
 import jp.sbi.celldesigner.plugin.PluginModel;
 import jp.sbi.celldesigner.plugin.PluginReaction;
+import jp.sbi.celldesigner.plugin.PluginSpeciesAlias;
 
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.SingularValueDecomposition;
 
 import com.al.CellDesignerPluginFrame;
+import com.al.cellplugin.MainFrame;
 
-class ProductScoreMenuAction extends PluginAction {
+public class ProductScoreMenuAction extends PluginAction {
 	private static final long serialVersionUID = 1L;
 	private CustomPlugin plugin;
 	private Map<String, Integer> scoreMap;
@@ -43,28 +45,23 @@ class ProductScoreMenuAction extends PluginAction {
 	}
 
 	private void showScores() {
-		String[][] scores2 = calculateScores();
-		
-		scores2 = calcSvd(scores2);
 
-		PluginModel selectedModel = this.plugin.getSelectedModel();
+		MainFrame fr1 = new MainFrame(this.plugin.getSelectedModel(), this);
+		
+		fr1.addWindowListener(new BasicWindowMonitor());
+
+		fr1.setVisible(true);
+	}
+
+	public String[] getReactionNames(PluginModel selectedModel) {
 		int reactionCount = selectedModel.getNumReactions();
 		String[] reactionNames = new String[reactionCount + 1];
 
-		Object[][] scores = new Object[reactionCount][2];
-		
 		reactionNames[0] = " ";
 		for(int i = 0; i < reactionCount ; i++){
 			reactionNames[i+1] = selectedModel.getReaction(i).getId();
 		}
-		
-		// new Object[][]{ {"a","b"},{"c","d"} },
-		CellDesignerPluginFrame fr = new CellDesignerPluginFrame(scores2,
-				reactionNames);
-
-		fr.addWindowListener(new BasicWindowMonitor());
-
-		fr.setVisible(true);
+		return reactionNames;
 	}
 	
 	private String[][] calcSvd(String[][] scores2) {
@@ -143,12 +140,12 @@ class ProductScoreMenuAction extends PluginAction {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private String[][] calculateScores() {
-		PluginModel selectedModel = this.plugin.getSelectedModel();
+	public String[][] calculateScores(PluginModel selectedModel) {
+		//PluginModel selectedModel = this.plugin.getSelectedModel();
 		pSet = new HashSet();
 		for (int i = 0; i < selectedModel.getNumReactions(); i++) {
 			PluginReaction reaction = selectedModel.getReaction(i);
-			System.out.println("Reaction is " + reaction.getId());
+			//System.out.println("Reaction is " + reaction.getId());
 			int reactants = reaction.getNumReactants();
 			int modifiers = reaction.getNumModifiers();
 			List<String> productList = getAllProducts(reaction);
@@ -156,7 +153,7 @@ class ProductScoreMenuAction extends PluginAction {
 			for (Iterator<String> iterator = productList.iterator(); iterator
 					.hasNext();) {
 				String product = (String) iterator.next();
-				System.out.println("Product is " + product);
+				//System.out.println("Product is " + product);
 				int score = 0;
 				if (scoreMap.containsKey(product)) {//
 					score = new Integer(scoreMap.get(product).intValue() - 1);
@@ -165,11 +162,14 @@ class ProductScoreMenuAction extends PluginAction {
 				}
 				scoreMap.put(product, score);
 				pSet.add(product);
-				System.out.println("Score is " + score);
+				//System.out.println("Score is " + score);
 			}
 		}//for each reaction
 		
-		return calc2();
+		String[][] scores = calc2();
+		scores = calcSvd(scores);
+
+		return scores;
 	}
 
 	public List<String> getAllProducts(PluginReaction reaction) {
@@ -182,4 +182,56 @@ class ProductScoreMenuAction extends PluginAction {
 
 		return productList;
 	}
+	
+	public Object[][] getReactionData(PluginModel selectedModel) {
+
+		int reactionCount = selectedModel.getNumReactions();
+
+		Object[][] modelData = new Object[reactionCount][8];
+
+		for (int i = 0; i < reactionCount; i++) {
+			PluginReaction reaction = selectedModel.getReaction(i);
+			String reactionType = reaction.getReactionType();
+			List products = getAllProducts(reaction);
+			String reactants = GetAllReactants(reaction);
+			String modifiers = GetAllModifiers(reaction);
+
+			modelData[i] = new String[] { reaction.getId(), reactionType,
+					Arrays.asList(products).toString(),
+					Integer.toString(reaction.getNumProducts()), reactants,
+					Integer.toString(reaction.getNumReactants()), modifiers,
+					Integer.toString(reaction.getNumModifiers()) };
+		}
+		
+		return modelData;
+	}
+
+	public String GetAllReactants(PluginReaction reaction) {
+		int num = reaction.getNumReactants();
+		String reactants = new String();
+		for (int i = 0; i < num; i++) {
+			reactants = (String) reactants + "#"
+					+ reaction.getReactant(i).getSpeciesInstance().getName();
+		}
+
+		return reactants;
+	}
+
+	public String GetAllModifiers(PluginReaction reaction) {
+		int num = reaction.getNumModifiers();
+		String MyModfiers = new String();
+		for (int i = 0; i < num; i++) {
+			MyModfiers = (String) MyModfiers + "#"
+					+ reaction.getModifier(i).getSpeciesInstance().getName();
+		}
+
+		return MyModfiers;
+	}
+
+	public PluginSpeciesAlias getSelectedSpecies() {
+		PluginListOf listof = this.plugin.getSelectedSpeciesNode();
+		PluginSpeciesAlias alias = (PluginSpeciesAlias) listof.get(0);
+		return alias;
+	}
+
 }
