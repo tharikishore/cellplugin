@@ -72,10 +72,16 @@ public class MainFrame extends javax.swing.JFrame {
         exportButton = new javax.swing.JButton();
         graphPane = new javax.swing.JPanel();
         algoPanel = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        algoLabel = new javax.swing.JLabel();
         abtPanel = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        aboutLabel = new javax.swing.JLabel();
         authPanel = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        authLabel = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         mainTabPane.setTabPlacement(javax.swing.JTabbedPane.LEFT);
 
@@ -169,7 +175,7 @@ public class MainFrame extends javax.swing.JFrame {
         jTabbedPane1.addTab("Scores", scorePane);
 
         javax.swing.GroupLayout graphPaneLayout = new javax.swing.GroupLayout(graphPane);
-        graphPane.setLayout(new CenterLayout());
+        graphPane.setLayout(graphPaneLayout);
         graphPaneLayout.setHorizontalGroup(
             graphPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 485, Short.MAX_VALUE)
@@ -194,41 +200,56 @@ public class MainFrame extends javax.swing.JFrame {
 
         mainTabPane.addTab("Score Data", scorePanel);
 
+        algoLabel.setText("<html><body><h1>H1 Heading Algo</h1><h2>H2 Heading</h2><br/>Normal Text: Your Text can go here too.. </body></html>");
+        algoLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        algoLabel.setAutoscrolls(true);
+        algoLabel.setMinimumSize(new java.awt.Dimension(400, 600));
+        algoLabel.setPreferredSize(new java.awt.Dimension(400, 600));
+        jScrollPane3.setViewportView(algoLabel);
+
         javax.swing.GroupLayout algoPanelLayout = new javax.swing.GroupLayout(algoPanel);
         algoPanel.setLayout(algoPanelLayout);
         algoPanelLayout.setHorizontalGroup(
             algoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 490, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
         );
         algoPanelLayout.setVerticalGroup(
             algoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 379, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
         );
 
         mainTabPane.addTab("Algorithm", algoPanel);
+
+        aboutLabel.setText("<html><body><h1>H1 Heading for About</h1><h2>H2 Heading</h2><br/>Normal Text: Your Text can go here too.. </body></html>");
+        aboutLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jScrollPane4.setViewportView(aboutLabel);
 
         javax.swing.GroupLayout abtPanelLayout = new javax.swing.GroupLayout(abtPanel);
         abtPanel.setLayout(abtPanelLayout);
         abtPanelLayout.setHorizontalGroup(
             abtPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 490, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
         );
         abtPanelLayout.setVerticalGroup(
             abtPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 379, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
         );
 
         mainTabPane.addTab("About", abtPanel);
+
+        authLabel.setText("<html><body><h1>H1 Heading for Authors</h1><h2>H2 Heading</h2><br/>Normal Text: Your Text can go here too.. </body></html>");
+        authLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jScrollPane5.setViewportView(authLabel);
 
         javax.swing.GroupLayout authPanelLayout = new javax.swing.GroupLayout(authPanel);
         authPanel.setLayout(authPanelLayout);
         authPanelLayout.setHorizontalGroup(
             authPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 490, Short.MAX_VALUE)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
         );
         authPanelLayout.setVerticalGroup(
             authPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 379, Short.MAX_VALUE)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
         );
 
         mainTabPane.addTab("Authors", authPanel);
@@ -317,8 +338,11 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel aboutLabel;
     private javax.swing.JPanel abtPanel;
+    private javax.swing.JLabel algoLabel;
     private javax.swing.JPanel algoPanel;
+    private javax.swing.JLabel authLabel;
     private javax.swing.JPanel authPanel;
     private javax.swing.JButton exportButton;
     private javax.swing.JButton exportButtonS;
@@ -326,6 +350,9 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel graphPane;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane mainTabPane;
     private javax.swing.JTable rcnTable;
